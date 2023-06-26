@@ -20,7 +20,7 @@ To run the simulation, simply navigate to the directory containing the Python fi
 
 
 
-Replace "RL.py" with the name of the Python file.
+Replace "Hoffman_RL.py" with the name of the Python file.
 
 ## Simulation Details
 
