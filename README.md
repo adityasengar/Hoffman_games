@@ -32,4 +32,7 @@ The simulation will output 2 files:
 - matrix_vs_t.dat: The 50x50 matrix (in default case) containing positions of human, machines, AI output after every 10 time steps
 - density_vs_t.dat: Density of human, machine, AI vs time 
 
-  
+
+# Analysis.nb
+
+This file is used to analyse the 2 output files, create movies and make plots
