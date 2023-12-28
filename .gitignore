@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+*.pyc
+
+# Data output
+*.dat
+
+# Environment
+.venv/
+venv/
+env/
