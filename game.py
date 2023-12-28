@@ -1,5 +1,5 @@
 import random
-import numpy as np
+import argparse
 
 class HoffmanGame:
     def __init__(self, dim=50, p_dense=0.02, k_birth=0.3, k_death=0.2, k_death_ai=0.2,
@@ -34,16 +34,11 @@ class HoffmanGame:
     def _move_agent(self, agent_idx):
         """Moves a single agent."""
         i, j = self.agents[agent_idx]
-        
-        # Simplified movement logic from notebook
         moves = [
-            ((i - 1) % self.dim, j), # Up
-            ((i + 1) % self.dim, j), # Down
-            (i, (j - 1) % self.dim), # Left
-            (i, (j + 1) % self.dim)  # Right
+            ((i - 1) % self.dim, j), ((i + 1) % self.dim, j),
+            (i, (j - 1) % self.dim), (i, (j + 1) % self.dim)
         ]
         random.shuffle(moves)
-
         for new_i, new_j in moves:
             if self.mat[new_i][new_j] == 0:
                 self.mat[new_i][new_j] = self.mat[i][j]
@@ -61,21 +56,23 @@ class HoffmanGame:
         for t in range(time_steps):
             random.shuffle(self.agents)
 
-            # Simplified logic from notebook
-            if t % birth_death_interval == 0 and t > 0:
-                # Placeholder for birth/death logic
-                pass
+            if t > 0 and t % birth_death_interval == 0:
+                pass # Placeholder for birth/death logic
 
             for idx in range(len(self.agents)):
                 self._move_agent(idx)
-                # Placeholder for neighbor interactions, AI creation etc.
 
             if (t + 1) % 100 == 0:
                 print(f"Time: {t+1}, Humans: {self.c_man}, Machines: {self.c_machine}, AI: {self.c_ai}")
         
         print("Simulation finished.")
 
-
 if __name__ == '__main__':
-    game = HoffmanGame()
-    game.run_simulation()
+    parser = argparse.ArgumentParser(description="Run the Hoffman Game simulation.")
+    parser.add_argument('--dim', type=int, default=50, help="Dimension of the simulation grid.")
+    parser.add_argument('--steps', type=int, default=1000, help="Number of time steps to run.")
+    parser.add_argument('--density', type=float, default=0.02, help="Initial density of humans.")
+    args = parser.parse_args()
+
+    game = HoffmanGame(dim=args.dim, p_dense=args.density)
+    game.run_simulation(time_steps=args.steps)
