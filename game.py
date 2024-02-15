@@ -1,5 +1,7 @@
 import random
 import argparse
+import json
+import os
 
 class HoffmanGame:
     def __init__(self, dim=50, p_dense=0.02, k_birth=0.3, k_death=0.2, k_death_ai=0.2,
@@ -48,31 +50,84 @@ class HoffmanGame:
                 self.agents[agent_idx] = (new_i, new_j)
                 break
 
-    def run_simulation(self, time_steps=1000, birth_death_interval=100):
+    def run_simulation(self, time_steps=1000, birth_death_interval=100, save_interval=0, save_path="game_state.json"):
         """Runs the main simulation loop."""
-        self._initialize_world()
-        
+        if not os.path.exists(save_path):
+            self._initialize_world()
+            print("Initialized new game world.")
+        else:
+            self.load_game(save_path)
+            print("Loaded game state.")
+
         print("Starting simulation...")
         for t in range(time_steps):
             random.shuffle(self.agents)
 
             if t > 0 and t % birth_death_interval == 0:
-                pass # Placeholder for birth/death logic
+                pass 
 
             for idx in range(len(self.agents)):
                 self._move_agent(idx)
 
             if (t + 1) % 100 == 0:
                 print(f"Time: {t+1}, Humans: {self.c_man}, Machines: {self.c_machine}, AI: {self.c_ai}")
-        
+            
+            if save_interval > 0 and (t + 1) % save_interval == 0:
+                self.save_game(save_path)
+                print(f"Game state saved at time {t+1} to {save_path}")
+
         print("Simulation finished.")
+
+    def save_game(self, filepath):
+        """Saves the current game state to a JSON file."""
+        state = {
+            'dim': self.dim,
+            'p_dense': self.p_dense,
+            'k_birth': self.k_birth,
+            'k_death': self.k_death,
+            'k_deathai': self.k_deathai,
+            'k_deathmachine': self.k_deathmachine,
+            'k_aicreate': self.k_aicreate,
+            'k_compcreate': self.k_compcreate,
+            'mat': self.mat,
+            'P': self.P,
+            'agents': self.agents,
+            'c_man': self.c_man,
+            'c_machine': self.c_machine,
+            'c_ai': self.c_ai,
+        }
+        with open(filepath, 'w') as f:
+            json.dump(state, f, indent=4)
+
+    def load_game(self, filepath):
+        """Loads the game state from a JSON file."""
+        with open(filepath, 'r') as f:
+            state = json.load(f)
+        
+        self.dim = state['dim']
+        self.p_dense = state['p_dense']
+        self.k_birth = state['k_birth']
+        self.k_death = state['k_death']
+        self.k_deathai = state['k_deathai']
+        self.k_deathmachine = state['k_deathmachine']
+        self.k_aicreate = state['k_aicreate']
+        self.k_compcreate = state['k_compcreate']
+        self.mat = state['mat']
+        self.P = state['P']
+        self.agents = [tuple(a) for a in state['agents']]
+        self.c_man = state['c_man']
+        self.c_machine = state['c_machine']
+        self.c_ai = state['c_ai']
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run the Hoffman Game simulation.")
     parser.add_argument('--dim', type=int, default=50, help="Dimension of the simulation grid.")
     parser.add_argument('--steps', type=int, default=1000, help="Number of time steps to run.")
     parser.add_argument('--density', type=float, default=0.02, help="Initial density of humans.")
+    parser.add_argument('--save_interval', type=int, default=100, help="Interval to save game state (0 for no saving).")
+    parser.add_argument('--save_path', type=str, default="game_state.json", help="Path to save/load game state.")
+
     args = parser.parse_args()
 
     game = HoffmanGame(dim=args.dim, p_dense=args.density)
-    game.run_simulation(time_steps=args.steps)
+    game.run_simulation(time_steps=args.steps, save_interval=args.save_interval, save_path=args.save_path)
