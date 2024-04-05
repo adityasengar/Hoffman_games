@@ -1,38 +1,62 @@
-# Hoffman_games
+# Hoffman Games Simulation
 
-# Reinforcement Learning Simulation of Human, Robot, and AI Interaction
+This project implements a cellular automata simulation, referred to as the "Hoffman Game," modeling interactions between different types of agents (Humans, Machines, AI) in a 2D world. The simulation explores concepts of population dynamics, cooperation, and emergent behavior.
 
-This simulation models the interactions between Humans, Robots, and AIs in a 2D grid world. There are Humans and Machines initially present. Special events occur when certain entities encounter each other:
+The original logic was developed in a Jupyter Notebook and has been refactored into a structured Python command-line application.
 
-- Humans have a natural birth rate (by reproduction), and a natural death rate.
-- Machines have a natural death rate smaller than the death rate of humans. 
-- Machines are also depleted when AI is formed.
-- AI has a natural death rate that is smaller than the death rate of humans.
-- At time t=0, the world consists of only humans. 
-- A human can move left, right, up, down or stay where they are.
-- If a human sees another human nearby, the tendency of both humans to stay at their respective location increases. This condition resembles a process of cooperation between human beings to ensure maximal survival.
-- Whenever 2 humans are nearby, they have a chance to construct a machine which is placed randomly in the near vicinity of the human pair.
-- If a human sees a machine nearby, it has a chance to fuse with the machine to become AI.
+## Project Overview
 
-## Dependencies
+The simulation models:
+-   **Agent Movement:** Agents can move in a 2D grid.
+-   **Interactions:** Tendency to cooperate, machine creation, and AI fusion.
+-   **Population Dynamics:** Birth and death rates for different agent types.
 
-This project requires Python 3 and NumPy, random and math libraries. If you don't have Python 3 installed, download it from the [official Python website](https://www.python.org/). To install NumPy, you can use pip:
+### Project Structure
 
+-   `game.py`: Contains the `HoffmanGame` class, encapsulating all simulation logic, agent behaviors, and population dynamics.
+-   `requirements.txt`: Lists all necessary Python dependencies.
 
+---
 
-## Running the Simulation
+## Installation
 
-To run the simulation, simply navigate to the directory containing the Python file in your terminal and run the following command:
+1.  Clone the repository:
+    ```bash
+    git clone https://github.com/adityasengar/Hoffman_games.git
+    cd Hoffman_games
+    ```
 
-Replace "Hoffman_games.py" with the name of the Python file.
+2.  It is recommended to use a virtual environment:
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # On Windows use `venv\\Scripts\\activate`
+    ```
 
-## Output
+3.  Install the required dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-The simulation will output 2 files:
-- matrix_vs_t.dat: The 50x50 matrix (in default case) containing positions of human, machines, AI output after every 10 time steps
-- density_vs_t.dat: Density of human, machine, AI vs time 
+---
 
+## Usage
 
-# Analysis.nb
+Run the simulation using the `game.py` script. You can configure various parameters via the command-line interface.
 
-This file is used to analyse the 2 output files, create movies and make plots
+```bash
+python game.py --dim 100 --steps 5000 --density 0.01 --save_interval 500 --save_path game_state.json --plot_path simulation_history.png
+```
+
+### Command-Line Arguments
+
+-   `--dim`: Dimension of the square simulation grid (e.g., `50` for a 50x50 grid). (Default: `50`)
+-   `--steps`: Number of time steps to run the simulation. (Default: `1000`)
+-   `--density`: Initial density of humans (between 0.0 and 1.0). (Default: `0.02`)
+-   `--save_interval`: Interval (in time steps) to save the game state to a JSON file (0 for no saving). (Default: `100`)
+-   `--save_path`: Path to the JSON file for saving/loading game state. (Default: `game_state.json`)
+-   `--plot_path`: Path to save the simulation history plot. (Default: `simulation_history.png`)
+
+### Output Files
+
+-   `game_state.json`: Saved simulation state, allowing resumption of a game.
+-   `simulation_history.png`: A plot visualizing the population counts of Humans, Machines, and AI over time.
