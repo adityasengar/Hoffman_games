@@ -2,6 +2,8 @@ import random
 import argparse
 import json
 import os
+import matplotlib.pyplot as plt
+import numpy as np
 
 class HoffmanGame:
     def __init__(self, dim=50, p_dense=0.02, k_birth=0.3, k_death=0.2, k_death_ai=0.2,
@@ -22,6 +24,8 @@ class HoffmanGame:
         self.c_man = 0
         self.c_machine = 0
         self.c_ai = 0
+        
+        self.history = {'time': [], 'humans': [], 'machines': [], 'ai': []}
 
     def _initialize_world(self):
         """Initializes the world with humans."""
@@ -50,7 +54,7 @@ class HoffmanGame:
                 self.agents[agent_idx] = (new_i, new_j)
                 break
 
-    def run_simulation(self, time_steps=1000, birth_death_interval=100, save_interval=0, save_path="game_state.json"):
+    def run_simulation(self, time_steps=1000, birth_death_interval=100, save_interval=0, save_path="game_state.json", plot_output_path=None):
         """Runs the main simulation loop."""
         if not os.path.exists(save_path):
             self._initialize_world()
@@ -69,6 +73,12 @@ class HoffmanGame:
             for idx in range(len(self.agents)):
                 self._move_agent(idx)
 
+            # Record history
+            self.history['time'].append(t)
+            self.history['humans'].append(self.c_man)
+            self.history['machines'].append(self.c_machine)
+            self.history['ai'].append(self.c_ai)
+
             if (t + 1) % 100 == 0:
                 print(f"Time: {t+1}, Humans: {self.c_man}, Machines: {self.c_machine}, AI: {self.c_ai}")
             
@@ -77,6 +87,8 @@ class HoffmanGame:
                 print(f"Game state saved at time {t+1} to {save_path}")
 
         print("Simulation finished.")
+        if plot_output_path:
+            self.plot_history(plot_output_path)
 
     def save_game(self, filepath):
         """Saves the current game state to a JSON file."""
@@ -95,6 +107,7 @@ class HoffmanGame:
             'c_man': self.c_man,
             'c_machine': self.c_machine,
             'c_ai': self.c_ai,
+            'history': self.history, # Save history as well
         }
         with open(filepath, 'w') as f:
             json.dump(state, f, indent=4)
@@ -118,6 +131,22 @@ class HoffmanGame:
         self.c_man = state['c_man']
         self.c_machine = state['c_machine']
         self.c_ai = state['c_ai']
+        self.history = state.get('history', {'time': [], 'humans': [], 'machines': [], 'ai': []}) # Load history
+    
+    def plot_history(self, output_path="simulation_history.png"):
+        """Plots the population history of humans, machines, and AI."""
+        print(f"Generating plot to {output_path}...")
+        plt.figure(figsize=(10, 6))
+        plt.plot(self.history['time'], self.history['humans'], label='Humans')
+        plt.plot(self.history['time'], self.history['machines'], label='Machines')
+        plt.plot(self.history['time'], self.history['ai'], label='AI')
+        plt.xlabel('Time Steps')
+        plt.ylabel('Population Count')
+        plt.title('Hoffman Game Simulation History')
+        plt.legend()
+        plt.grid(True)
+        plt.savefig(output_path)
+        print(f"Plot saved to {output_path}")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run the Hoffman Game simulation.")
@@ -126,8 +155,10 @@ if __name__ == '__main__':
     parser.add_argument('--density', type=float, default=0.02, help="Initial density of humans.")
     parser.add_argument('--save_interval', type=int, default=100, help="Interval to save game state (0 for no saving).")
     parser.add_argument('--save_path', type=str, default="game_state.json", help="Path to save/load game state.")
+    parser.add_argument('--plot_path', type=str, default="simulation_history.png", help="Path to save the simulation history plot.")
 
     args = parser.parse_args()
 
     game = HoffmanGame(dim=args.dim, p_dense=args.density)
-    game.run_simulation(time_steps=args.steps, save_interval=args.save_interval, save_path=args.save_path)
+    game.run_simulation(time_steps=args.steps, save_interval=args.save_interval, 
+                         save_path=args.save_path, plot_output_path=args.plot_path)
