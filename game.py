@@ -63,7 +63,7 @@ class HoffmanGame:
             self.load_game(save_path)
             print("Loaded game state.")
 
-        print("Starting simulation...")
+        print("--- Hoffman Game Simulation ---")
         for t in range(time_steps):
             random.shuffle(self.agents)
 
