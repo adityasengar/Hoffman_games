@@ -54,6 +54,7 @@ class HoffmanGame:
                 self.agents[agent_idx] = (new_i, new_j)
                 break
 
+    """Runs the main simulation loop."""
     def run_simulation(self, time_steps=1000, birth_death_interval=100, save_interval=0, save_path="game_state.json", plot_output_path=None):
         """Runs the main simulation loop."""
         if not os.path.exists(save_path):
