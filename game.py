@@ -66,7 +66,8 @@ class HoffmanGame:
 
         print("--- Hoffman Game Simulation ---")
         for t in range(time_steps):
-            random.shuffle(self.agents)
+            # Shuffle agent processing order each step
+        random.shuffle(self.agents)
 
             if t > 0 and t % birth_death_interval == 0:
                 pass 
