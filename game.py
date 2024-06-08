@@ -153,7 +153,7 @@ class HoffmanGame:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run the Hoffman Game simulation.")
     parser.add_argument('--dim', type=int, default=50, help="Dimension of the simulation grid.")
-    parser.add_argument('--steps', type=int, default=1000, help="Number of time steps to run.")
+    parser.add_argument('--time_steps', type=int, default=1000, help="Number of time steps to run.")
     parser.add_argument('--density', type=float, default=0.02, help="Initial density of humans.")
     parser.add_argument('--save_interval', type=int, default=100, help="Interval to save game state (0 for no saving).")
     parser.add_argument('--save_path', type=str, default="game_state.json", help="Path to save/load game state.")
