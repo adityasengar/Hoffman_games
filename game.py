@@ -146,7 +146,7 @@ class HoffmanGame:
         plt.ylabel('Population Count')
         plt.title('Hoffman Game Simulation History')
         plt.legend()
-        plt.grid(True)
+        plt.grid(True, linestyle="--", alpha=0.6)
         plt.savefig(output_path)
         print(f"Plot saved to {output_path}")
 
