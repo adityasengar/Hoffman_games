@@ -60,3 +60,4 @@ python game.py --dim 100 --steps 5000 --density 0.01 --save_interval 500 --save_
 
 -   `game_state.json`: Saved simulation state, allowing resumption of a game.
 -   `simulation_history.png`: A plot visualizing the population counts of Humans, Machines, and AI over time.
+# Updated on 2026-01-09
